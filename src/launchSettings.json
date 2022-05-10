@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "books",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "books": "StartDebugging",
+        "books_db": "StartWithoutDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "reviews": "StartDebugging",
+        "reviews_db": "StartWithoutDebugging"
+      }
+    }
+  }
+}
