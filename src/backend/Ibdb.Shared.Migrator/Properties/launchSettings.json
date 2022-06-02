@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Ibdb.Shared.Migrator": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
