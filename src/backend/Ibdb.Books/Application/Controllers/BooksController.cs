@@ -23,5 +23,13 @@ namespace Ibdb.Books.Application.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("edit")]
+        public async Task<IActionResult> Edit(EditBookDto dto)
+        {
+            var result = await _localEventBus.Send(new EditBookCommand { Id = dto.Id, Title = dto.Title, Description = dto.Description });
+
+            return Ok(result);
+        }
     }
 }
