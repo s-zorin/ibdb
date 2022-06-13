@@ -9,4 +9,4 @@ if (!$name) {
     return
 }
 
-dotnet ef migrations add --context Ibdb.Shared.Infrastructure.Ef.EventStoreContext $name
+dotnet ef migrations add --output-dir Migrations/EventStore --context Ibdb.Shared.Infrastructure.Ef.EventStoreContext $name

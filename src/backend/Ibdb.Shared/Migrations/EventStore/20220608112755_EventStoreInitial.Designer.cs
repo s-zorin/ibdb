@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Ibdb.Shared.Migrations
+namespace Ibdb.Shared.Migrations.EventStore
 {
     [DbContext(typeof(EventStoreContext))]
-    [Migration("20220531132030_EventStoreInitial")]
+    [Migration("20220608112755_EventStoreInitial")]
     partial class EventStoreInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,7 @@ namespace Ibdb.Shared.Migrations
             modelBuilder.Entity("Ibdb.Shared.Domain.Event", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
                         .HasComment("Event Id.");
@@ -68,6 +69,8 @@ namespace Ibdb.Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EntityVersion");
+
+                    b.HasIndex("Timestamp");
 
                     b.ToTable("event_store", (string)null);
                 });

@@ -15,6 +15,9 @@ namespace Ibdb.Shared.Infrastructure.Ef
                 .HasIndex(x => x.EntityVersion);
 
             builder
+                .HasIndex(x => x.Timestamp);
+
+            builder
                 .Property(e => e.Id)
                 .HasColumnName("id")
                 .HasComment("Event Id.")

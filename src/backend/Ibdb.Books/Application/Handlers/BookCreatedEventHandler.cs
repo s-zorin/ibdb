@@ -12,7 +12,7 @@ namespace Ibdb.Books.Application.Handlers
 
         public Book Handle(Guid entityId, Book? entity, BookCreatedEventDataDto data)
         {
-            return new Book(entityId, data.Title!, data.Description, 0);
+            return new Book { Id = entityId, Title = data.Title, Description = data.Description, Rating = 0 };
         }
     }
 }

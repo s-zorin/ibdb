@@ -44,13 +44,11 @@ namespace Ibdb.Shared
                         .AsImplementedInterfaces()
                         .WithTransientLifetime()
                      .AddClasses(classes => classes
-                        .AssignableTo(typeof(IRequestHandler<,>))
-                        .Where(t => t != typeof(RabbitMqRequestHandlerDecorator<,>)))
+                        .AssignableTo(typeof(IRequestHandler<,>)))
                         .AsImplementedInterfaces()
                         .WithTransientLifetime()
                      .AddClasses(classes => classes
-                        .AssignableTo(typeof(INotificationHandler<>))
-                        .Where(t => t != typeof(RabbitMqNotificationHandlerDecorator<>)))
+                        .AssignableTo(typeof(INotificationHandler<>)))
                         .AsImplementedInterfaces()
                         .WithTransientLifetime()
                      .AddClasses(classes => classes
@@ -60,14 +58,16 @@ namespace Ibdb.Shared
                      .AddClasses(classes => classes
                         .AssignableTo(typeof(IRepository<>)))
                         .AsImplementedInterfaces()
+                        .WithTransientLifetime()
+                     .AddClasses(classes => classes
+                        .AssignableTo(typeof(IEventConvertHandler<>)))
+                        .AsImplementedInterfaces()
                         .WithTransientLifetime());
 
             var mapper = new MapperConfiguration(c => c.AddMaps(executingAssembly, entryAssembly)).CreateMapper();
             services.AddTransient<Application.IMapper, AutoMapperMapper>(_ => new AutoMapperMapper(mapper));
 
             services.TryDecorate(typeof(ICommandHandler<>), typeof(RetryCommandHandlerDecorator<>));
-            services.TryDecorate(typeof(IRequestHandler<,>), typeof(RabbitMqRequestHandlerDecorator<,>));
-            services.TryDecorate(typeof(INotificationHandler<>), typeof(RabbitMqNotificationHandlerDecorator<>));
 
             services.AddDbContext<EventStoreContext>(ctxOptions => ctxOptions.UseNpgsql(options.EventStoreConnectionString!));
             services.AddDbContext<OutboxContext>(ctxOptions => ctxOptions.UseNpgsql(options.OutboxConnectionString!));
@@ -75,6 +75,9 @@ namespace Ibdb.Shared
             services.AddAutoMapper(executingAssembly, entryAssembly);
 
             services.AddSingleton(RabbitHutch.CreateBus(options.RabbitMqConnectionString));
+
+            services.AddHostedService<OutboxBackroundService>();
+            services.AddHostedService(serviceProvider => new RabbitMqBackgroundService(serviceProvider, services));
 
             return services;
         }

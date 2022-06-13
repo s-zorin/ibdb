@@ -21,7 +21,7 @@ namespace Ibdb.Shared.Application
 
             await using var scope = _serviceProvider.CreateAsyncScope();
 
-            var eventHandlers = scope.ServiceProvider.GetServices(typeof(IEventHandler)).Cast<IEventHandler>().ToList();
+            var eventHandlers = scope.ServiceProvider.GetServices<IEventHandler>().ToList();
 
             object? entity = null;
 
@@ -32,8 +32,6 @@ namespace Ibdb.Shared.Application
 
                 var eventHandler = eventHandlers.Single(h => h.Name == e.Name && h.DataVersion == e.DataVersion);
 
-                // Get implemented IEventHandler<,> interface;
-                // Then get the last generic argument out of that interface and use it for deserialization.
                 var eventDataType = eventHandler
                     .GetType()
                     .FindInterfaces((t, c) => t.IsGenericType && t.GetGenericTypeDefinition() == c as Type, typeof(IEventHandler<,>))

@@ -3,13 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Ibdb.Shared.Application.Handlers
 {
-    internal class EntityUpdatedNotificationHandler : INotificationHandler<EntityUpdatedNotification>
+    internal class EntityUpdateNotificationHandler : INotificationHandler<EntityUpdateNotification>
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventStore _eventStore;
         private readonly IEntityFactory _entityFactory;
 
-        public EntityUpdatedNotificationHandler(
+        public EntityUpdateNotificationHandler(
             IServiceProvider serviceProvider,
             IEventStore eventSource,
             IEntityFactory entityFactory)
@@ -19,7 +19,7 @@ namespace Ibdb.Shared.Application.Handlers
             _entityFactory = entityFactory;
         }
 
-        public async Task Handle(EntityUpdatedNotification notification)
+        public async Task Handle(EntityUpdateNotification notification)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
 

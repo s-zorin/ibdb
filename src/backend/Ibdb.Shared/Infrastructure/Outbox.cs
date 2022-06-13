@@ -1,4 +1,5 @@
 ﻿using Ibdb.Shared.Application;
+using Ibdb.Shared.Domain;
 using Ibdb.Shared.Infrastructure.Ef;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -6,10 +7,12 @@ using System.Data;
 
 namespace Ibdb.Shared.Infrastructure
 {
-    internal sealed class Outbox : IOutbox, IDisposable, IAsyncDisposable, IScopedService
+    internal sealed class Outbox : IOutbox, IAsyncDisposable, IScopedService
     {
         private readonly OutboxContext _context;
         private readonly IDbContextTransaction _transaction;
+
+        private bool _isDisposed;
 
         public Outbox(OutboxContext context)
         {
@@ -17,31 +20,30 @@ namespace Ibdb.Shared.Infrastructure
             _transaction = _context.Database.BeginTransaction(IsolationLevel.Serializable);
         }
 
-        public Task AddEvent(Guid entityId, string eventName, int eventDataVersion, string eventData)
+        public async Task AddEvent(Guid entityId, string eventName, int eventDataVersion, string eventData)
         {
-            // TODO
-            return Task.CompletedTask;
+            var newEvent = new OutboxEvent
+            {
+                Name = eventName,
+                EntityId = entityId,
+                Data = eventData,
+                DataVersion = eventDataVersion
+            };
+
+            _context.Events.Add(newEvent);
+
+            await _context.SaveChangesAsync();
         }
 
         public async ValueTask DisposeAsync()
         {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
             await _transaction.CommitAsync();
 
-            Dispose(false);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool isDisposing)
-        {
-            if (isDisposing)
-            {
-                _transaction.Commit();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(isDisposing: true);
             GC.SuppressFinalize(this);
         }
     }

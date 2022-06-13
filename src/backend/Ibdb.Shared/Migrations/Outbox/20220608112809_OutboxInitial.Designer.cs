@@ -3,17 +3,19 @@ using System;
 using Ibdb.Shared.Infrastructure.Ef;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Ibdb.Shared.Migrations
+namespace Ibdb.Shared.Migrations.Outbox
 {
-    [DbContext(typeof(EventStoreContext))]
-    partial class EventStoreContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(OutboxContext))]
+    [Migration("20220608112809_OutboxInitial")]
+    partial class OutboxInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,9 +24,10 @@ namespace Ibdb.Shared.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Ibdb.Shared.Domain.Event", b =>
+            modelBuilder.Entity("Ibdb.Shared.Domain.OutboxEvent", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
                         .HasComment("Event Id.");
@@ -45,11 +48,6 @@ namespace Ibdb.Shared.Migrations
                         .HasColumnName("entity_id")
                         .HasComment("An Id of an entity which this event related to.");
 
-                    b.Property<int>("EntityVersion")
-                        .HasColumnType("integer")
-                        .HasColumnName("entity_version")
-                        .HasComment("A would be entity version if this event was applied to it.");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -65,9 +63,9 @@ namespace Ibdb.Shared.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntityVersion");
+                    b.HasIndex("Timestamp");
 
-                    b.ToTable("event_store", (string)null);
+                    b.ToTable("outbox", (string)null);
                 });
 #pragma warning restore 612, 618
         }

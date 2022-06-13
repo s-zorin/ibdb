@@ -34,6 +34,9 @@ namespace Ibdb.Books.Infrastructure.Ef
                 .HasColumnName("rating")
                 .HasComment("Book rating. 0.0 - lowest possible rating, 1.0 highest possible rating.")
                 .IsRequired();
+
+            builder
+                .Ignore(e => e.ReviewScores);
         }
     }
 }

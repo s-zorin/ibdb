@@ -11,7 +11,8 @@
         "books_db": "StartWithoutDebugging",
         "rabbitmq": "StartWithoutDebugging",
         "reviews": "StartDebugging",
-        "reviews_db": "StartWithoutDebugging"
+        "reviews_db": "StartWithoutDebugging",
+        "migrator": "StartDebugging"
       }
     }
   }

@@ -1,4 +1,5 @@
 ﻿using Ibdb.Books.Infrastructure.Ef;
+using Ibdb.Reviews.Infrastructure.Ef;
 using Ibdb.Shared.Infrastructure.Ef;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,8 +21,6 @@ namespace Ibdb.Shared.Migrator
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<EventStoreContext>(options => options.UseNpgsql(Configuration.GetConnectionString("EventStore")));
-            services.AddDbContext<BooksContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Books")));
             services.AddLogging(logger => logger.AddConsole());
         }
 

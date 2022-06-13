@@ -4,13 +4,6 @@ using System.Reflection;
 
 namespace Ibdb.Shared.Infrastructure.Ef
 {
-    public class OutboxContext : DbContext
-    {
-        public OutboxContext(DbContextOptions<OutboxContext> options) : base(options)
-        {
-        }
-    }
-
     public class EventStoreContext : DbContext
     {
         public EventStoreContext(DbContextOptions<EventStoreContext> options) : base(options)
@@ -23,7 +16,7 @@ namespace Ibdb.Shared.Infrastructure.Ef
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfiguration(new EventConfiguration());
         }
     }
 }

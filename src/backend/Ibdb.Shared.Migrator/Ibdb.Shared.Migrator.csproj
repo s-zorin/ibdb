@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ibdb.Books\Ibdb.Books.csproj" />
+    <ProjectReference Include="..\Ibdb.Reviews\Ibdb.Reviews.csproj" />
     <ProjectReference Include="..\Ibdb.Shared\Ibdb.Shared.csproj" />
   </ItemGroup>
 

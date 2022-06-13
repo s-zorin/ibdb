@@ -7,7 +7,7 @@ namespace Ibdb.Shared.Domain
 
         public DateTime Timestamp { get; set; }
 
-        public string Name { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
 
         public Guid EntityId { get; set; }
 
@@ -15,6 +15,6 @@ namespace Ibdb.Shared.Domain
 
         public int DataVersion { get; set; }
 
-        public string Data { get; set; } = null!;
+        public string Data { get; set; } = string.Empty;
     }
 }

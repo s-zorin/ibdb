@@ -18,6 +18,8 @@ namespace Ibdb.Shared.Infrastructure
         private readonly IDbContextTransaction _transaction;
         private readonly HashSet<Event> _addedEvents;
 
+        private bool _isDisposed;
+
         public EventStore(EventStoreContext context, IMapper mapper, ILocalEventBus localEventBus, IOutbox outbox)
         {
             _context = context;
@@ -71,6 +73,11 @@ namespace Ibdb.Shared.Infrastructure
 
         public async ValueTask DisposeAsync()
         {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
             foreach (var e in _addedEvents)
             {
                 await _outbox.AddEvent(e.EntityId, e.Name, e.DataVersion, e.Data);
@@ -80,19 +87,10 @@ namespace Ibdb.Shared.Infrastructure
 
             foreach (var entityId in _addedEvents.Select(e => e.EntityId).Distinct())
             {
-                await _localEventBus.Publish(new EntityUpdatedNotification { EntityId = entityId });
+                await _localEventBus.Publish(new EntityUpdateNotification { EntityId = entityId });
             }
 
-            Dispose(false);
             GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool isDisposing)
-        {
-            if (isDisposing)
-            {
-                _transaction.Commit();
-            }
         }
     }
 }

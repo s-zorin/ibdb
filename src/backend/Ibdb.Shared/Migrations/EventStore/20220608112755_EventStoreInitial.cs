@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Ibdb.Shared.Migrations
+namespace Ibdb.Shared.Migrations.EventStore
 {
     public partial class EventStoreInitial : Migration
     {
@@ -30,6 +30,11 @@ namespace Ibdb.Shared.Migrations
                 name: "IX_event_store_entity_version",
                 table: "event_store",
                 column: "entity_version");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_event_store_timestamp",
+                table: "event_store",
+                column: "timestamp");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
