@@ -55,7 +55,7 @@ namespace Ibdb.Shared.Infrastructure
                     }
                 }
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(CancellationToken.None);
             }
         }
     }

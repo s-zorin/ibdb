@@ -1,11 +1,10 @@
 ﻿using Ibdb.Books.Domain;
 using Ibdb.Books.Infrastructure.Ef;
-using Ibdb.Shared.Application;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ibdb.Books.Application.Repositories
 {
-    public class BookRepository : IRepository<Book>
+    public class BookRepository : IBookRepository
     {
         private readonly BooksContext _context;
 
@@ -26,6 +25,11 @@ namespace Ibdb.Books.Application.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<Book>> Get(int skip, int take)
+        {
+            return await _context.Books.Skip(skip).Take(take).ToListAsync();
         }
     }
 }

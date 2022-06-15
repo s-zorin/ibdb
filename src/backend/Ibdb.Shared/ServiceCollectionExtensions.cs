@@ -58,11 +58,15 @@ namespace Ibdb.Shared
                      .AddClasses(classes => classes
                         .AssignableTo(typeof(IRepository<>)))
                         .AsImplementedInterfaces()
-                        .WithTransientLifetime()
+                        .WithScopedLifetime()
                      .AddClasses(classes => classes
                         .AssignableTo(typeof(IEventConvertHandler<>)))
                         .AsImplementedInterfaces()
-                        .WithTransientLifetime());
+                        .WithTransientLifetime()
+                     .AddClasses(classes => classes
+                        .AssignableTo(typeof(IQueryHandler<,>)))
+                        .AsImplementedInterfaces()
+                        .WithScopedLifetime());
 
             var mapper = new MapperConfiguration(c => c.AddMaps(executingAssembly, entryAssembly)).CreateMapper();
             services.AddTransient<Application.IMapper, AutoMapperMapper>(_ => new AutoMapperMapper(mapper));

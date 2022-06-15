@@ -53,5 +53,18 @@ namespace Ibdb.Shared.Infrastructure
                 await notificationHandler.Handle(message);
             }
         }
+
+        public async Task<TResult> Execute<TResult>(IQuery<TResult> query)
+        {
+            if (query is null)
+                throw new ArgumentNullException(nameof(query));
+
+            await using var scope = _serviceProvider.CreateAsyncScope();
+
+            var queryHandlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+            var queryHandler = (IQueryHandler)scope.ServiceProvider.GetRequiredService(queryHandlerType);
+
+            return (TResult)await queryHandler.Handle(query);
+        }
     }
 }

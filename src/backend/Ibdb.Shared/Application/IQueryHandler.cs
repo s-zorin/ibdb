@@ -1,19 +1,19 @@
 ﻿
 namespace Ibdb.Shared.Application
 {
-    public interface IRequestHandler
+    public interface IQueryHandler
     {
-        Task<object> Handle(object request);
+        Task<object> Handle(object query);
     }
 
-    public interface IRequestHandler<in TRequest, TResponse> : IRequestHandler
-        where TRequest : IRequest<TResponse>
+    public interface IQueryHandler<in TQuery, TResult> : IQueryHandler
+        where TQuery : IQuery<TResult>
     {
-        Task<object> IRequestHandler.Handle(object request) => Cast(Handle((TRequest)request));
+        Task<object> IQueryHandler.Handle(object query) => Cast(Handle((TQuery)query));
 
-        Task<TResponse> Handle(TRequest request);
+        Task<TResult> Handle(TQuery query);
 
-        private static Task<object> Cast(Task<TResponse> task)
+        private static Task<object> Cast(Task<TResult> task)
         {
             var tcs = new TaskCompletionSource<object>();
 
