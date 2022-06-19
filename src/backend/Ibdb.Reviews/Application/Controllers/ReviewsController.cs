@@ -10,18 +10,24 @@ namespace Ibdb.Reviews.Application.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly ILocalEventBus _localEventBus;
+        private readonly IMapper _mapper;
+        private readonly IOperationTracker _operationTracker;
 
-        public ReviewsController(ILocalEventBus localEventBus)
+        public ReviewsController(ILocalEventBus localEventBus, IMapper mapper, IOperationTracker operationTracker)
         {
             _localEventBus = localEventBus;
+            _mapper = mapper;
+            _operationTracker = operationTracker;
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Create(CreateReviewDto dto)
+        [HttpPost]
+        public IActionResult Create(Guid operationId, CreateReviewDto dto)
         {
-            var result = await _localEventBus.Send(new CreateReviewCommand { BookId = dto.BookId, Text = dto.Text, Score = dto.Score });
+            var command = _mapper.Map<CreateReviewCommand>(dto);
 
-            return Ok(result);
+            _ = _localEventBus.Send(command).ContinueWith(t => _operationTracker.Completed(t, operationId));
+
+            return Accepted();
         }
     }
 }

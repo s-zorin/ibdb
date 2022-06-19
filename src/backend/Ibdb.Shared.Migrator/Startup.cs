@@ -15,13 +15,17 @@ namespace Ibdb.Shared.Migrator
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(logger => logger.AddConsole());
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+#pragma warning disable RCS1163 // Unused parameter.
+#pragma warning disable IDE0060 // Remove unused parameter
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
         }
+#pragma warning restore RCS1163 // Unused parameter.
+#pragma warning restore IDE0060 // Remove unused parameter
     }
 }

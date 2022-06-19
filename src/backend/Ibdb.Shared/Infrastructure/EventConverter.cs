@@ -15,7 +15,7 @@ namespace Ibdb.Shared.Infrastructure
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task<EventDto?> Convert(EventDto e)
+        public async Task<ConvertedEventDto?> Convert(EventDto e)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
 

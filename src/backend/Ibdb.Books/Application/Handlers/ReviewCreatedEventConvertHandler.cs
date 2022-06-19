@@ -6,12 +6,10 @@ namespace Ibdb.Books.Application.Handlers
 {
     public class ReviewCreatedEventConvertHandler : IEventConvertHandler<ReviewCreatedEventDataDto>
     {
-        private readonly IEventStore _eventStore;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public ReviewCreatedEventConvertHandler(IEventStore eventStore, IJsonSerializer jsonSerializer)
+        public ReviewCreatedEventConvertHandler(IJsonSerializer jsonSerializer)
         {
-            _eventStore = eventStore;
             _jsonSerializer = jsonSerializer;
         }
 
@@ -19,24 +17,13 @@ namespace Ibdb.Books.Application.Handlers
 
         public int DataVersion => 1;
 
-        public async Task<EventDto?> Convert(Guid entityId, ReviewCreatedEventDataDto eventData)
+        public async Task<ConvertedEventDto> Convert(Guid entityId, ReviewCreatedEventDataDto eventData)
         {
-            var events = await _eventStore.GetEvents(eventData.BookId);
-
-            if (events.Count == 0)
-                return null;
-
-            return new EventDto
-            {
-                EntityId = eventData.BookId,
-                Name = "BookReviewed",
-                DataVersion = 1,
-                Data = await _jsonSerializer.Serialize<BookReviewedEventDataDto>(x =>
-                {
-                    x.ReviewId = entityId;
-                    x.Score = eventData.Score;
-                })
-            };
+            return new ConvertedEventDto(
+                EntityId: eventData.BookId,
+                Name: "BookReviewed",
+                DataVersion: 1,
+                Data: await _jsonSerializer.Serialize(new BookReviewedEventDataDto(entityId, eventData.Score)));
         }
     }
 }

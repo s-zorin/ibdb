@@ -9,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ReviewsContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Reviews")));
 builder.Services.AddSharedServices(options => options
-    .SetEventStoreConnectionString(builder.Configuration.GetConnectionString("EventStore"))
-    .SetOutboxConnectionString(builder.Configuration.GetConnectionString("Outbox"))
-    .SetRabbitMqConnectionString(builder.Configuration.GetConnectionString("RabbitMq")));
+    .AddEventStore(builder.Configuration.GetConnectionString("EventStore"))
+    .AddOutbox(builder.Configuration.GetConnectionString("Outbox"))
+    .AddRabbitMq(builder.Configuration.GetConnectionString("RabbitMq")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

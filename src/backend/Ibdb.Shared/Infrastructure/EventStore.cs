@@ -87,7 +87,7 @@ namespace Ibdb.Shared.Infrastructure
 
             foreach (var entityId in _addedEvents.Select(e => e.EntityId).Distinct())
             {
-                await _localEventBus.Publish(new EntityUpdateNotification { EntityId = entityId });
+                await _localEventBus.Publish(new EntityUpdateNotification(entityId));
             }
 
             GC.SuppressFinalize(this);

@@ -1,9 +1,10 @@
-﻿namespace Ibdb.Shared.Application
+﻿
+namespace Ibdb.Shared.Application
 {
     public interface ILocalEventBus : IEventBus
     {
-        public Task<ICommandResult> Send(ICommand command);
+        Task Send<TCommand>(TCommand command);
 
-        public Task<TResult> Execute<TResult>(IQuery<TResult> query);
+        Task<TResult> Execute<TResult>(IQuery<TResult> query);
     }
 }

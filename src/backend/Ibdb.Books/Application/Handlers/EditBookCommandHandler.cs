@@ -7,31 +7,21 @@ namespace Ibdb.Books.Application.Handlers
     public class EditBookCommandHandler : ICommandHandler<EditBookCommand>
     {
         private readonly IEventStore _eventStore;
+        private readonly IMapper _mapper;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public EditBookCommandHandler(IEventStore eventStore, IJsonSerializer jsonSerializer)
+        public EditBookCommandHandler(IEventStore eventStore, IMapper mapper, IJsonSerializer jsonSerializer)
         {
             _eventStore = eventStore;
+            _mapper = mapper;
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task<ICommandResult> Handle(EditBookCommand command)
+        public async Task Handle(EditBookCommand command)
         {
-            if (command.Id is null)
-                return new CommandResult(default, false);
+            var eventData = await _jsonSerializer.Serialize(_mapper.Map<BookEditedEventDataDto>(command));
 
-            if (command.Title is null)
-                return new CommandResult(default, false);
-
-            var eventData = await _jsonSerializer.Serialize<BookEditedEventDataDto>(x =>
-            {
-                x.Title = command.Title;
-                x.Description = command.Description;
-            });
-
-            await _eventStore.AddEvent(command.Id.Value, "BookEdited", 1, eventData);
-
-            return new CommandResult(command.Id.Value, true);
+            await _eventStore.AddEvent(command.Id, "BookEdited", 1, eventData);
         }
     }
 }

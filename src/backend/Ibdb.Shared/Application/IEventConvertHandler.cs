@@ -8,13 +8,13 @@ namespace Ibdb.Shared.Application
 
         int DataVersion { get; }
 
-        Task<EventDto?> Convert(Guid entityId, object eventData);
+        Task<ConvertedEventDto> Convert(Guid entityId, object eventData);
     }
 
     public interface IEventConvertHandler<TEventData> : IEventConvertHandler
     {
-        Task<EventDto?> IEventConvertHandler.Convert(Guid entityId, object eventData) => Convert(entityId, (TEventData)eventData);
+        Task<ConvertedEventDto> IEventConvertHandler.Convert(Guid entityId, object eventData) => Convert(entityId, (TEventData)eventData);
 
-        Task<EventDto?> Convert(Guid entityId, TEventData eventData);
+        Task<ConvertedEventDto> Convert(Guid entityId, TEventData eventData);
     }
 }

@@ -4,6 +4,6 @@ namespace Ibdb.Shared.Application
 {
     public interface IEventConverter
     {
-        Task<EventDto?> Convert(EventDto e);
+        Task<ConvertedEventDto?> Convert(EventDto e);
     }
 }

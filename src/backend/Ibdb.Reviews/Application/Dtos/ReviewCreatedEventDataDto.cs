@@ -1,11 +1,4 @@
 ﻿namespace Ibdb.Reviews.Application.Dtos
 {
-    public class ReviewCreatedEventDataDto
-    {
-        public Guid BookId { get; set; }
-
-        public string Text { get; set; } = string.Empty;
-
-        public float Score { get; set; }
-    }
+    public record ReviewCreatedEventDataDto(Guid BookId, string Text, float Score);
 }

@@ -39,6 +39,19 @@ services:
       - reviews_db
       - rabbitmq
 
+  notifications:
+    container_name: ibdb-notifications
+    restart: unless-stopped
+    build:
+      context: ./backend
+      dockerfile: Ibdb.Notifications/Dockerfile
+    environment:
+      - CONNECTIONSTRINGS__RABBITMQ=host=rabbitmq;username=rabbitmq;password=rabbitmq;publisherConfirms=true
+    networks:
+      - ibdb-network
+    depends_on:
+      - rabbitmq
+
   migrator:
     container_name: ibdb-migrator
     restart: unless-stopped

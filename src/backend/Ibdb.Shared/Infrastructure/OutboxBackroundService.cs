@@ -45,7 +45,7 @@ namespace Ibdb.Shared.Infrastructure
 
                     try
                     {
-                        await distributedEventBus.Publish(new IntegrationEventNotification { Event = mapper.Map<EventDto>(e) });
+                        await distributedEventBus.Publish(new IntegrationEventNotification(mapper.Map<EventDto>(e)));
                         context.Events.Remove(e);
                     }
                     catch (Exception ex)

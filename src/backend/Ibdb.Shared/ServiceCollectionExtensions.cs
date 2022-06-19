@@ -73,15 +73,24 @@ namespace Ibdb.Shared
 
             services.TryDecorate(typeof(ICommandHandler<>), typeof(RetryCommandHandlerDecorator<>));
 
-            services.AddDbContext<EventStoreContext>(ctxOptions => ctxOptions.UseNpgsql(options.EventStoreConnectionString!));
-            services.AddDbContext<OutboxContext>(ctxOptions => ctxOptions.UseNpgsql(options.OutboxConnectionString!));
+            if (options.EventStoreConnectionString is not null)
+                services.AddDbContext<EventStoreContext>(ctxOptions => ctxOptions.UseNpgsql(options.EventStoreConnectionString));
+
+            if (options.OutboxConnectionString is not null)
+            {
+                services.AddDbContext<OutboxContext>(ctxOptions => ctxOptions.UseNpgsql(options.OutboxConnectionString));
+                services.AddHostedService<OutboxBackroundService>();
+            }
+
+            if (options.RabbitMqConnectionString is not null)
+            {
+                services.AddSingleton(RabbitHutch.CreateBus(options.RabbitMqConnectionString));
+                services.AddHostedService(serviceProvider => new RabbitMqBackgroundService(serviceProvider, services));
+            }
 
             services.AddAutoMapper(executingAssembly, entryAssembly);
 
-            services.AddSingleton(RabbitHutch.CreateBus(options.RabbitMqConnectionString));
-
-            services.AddHostedService<OutboxBackroundService>();
-            services.AddHostedService(serviceProvider => new RabbitMqBackgroundService(serviceProvider, services));
+            services.AddSignalR();
 
             return services;
         }

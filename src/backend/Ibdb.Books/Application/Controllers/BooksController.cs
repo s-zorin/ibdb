@@ -2,6 +2,7 @@
 using Ibdb.Books.Application.Dtos;
 using Ibdb.Books.Application.Queries;
 using Ibdb.Shared.Application;
+using Ibdb.Shared.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ibdb.Books.Application.Controllers
@@ -11,34 +12,45 @@ namespace Ibdb.Books.Application.Controllers
     public class BooksController : ControllerBase
     {
         private readonly ILocalEventBus _localEventBus;
+        private readonly IMapper _mapper;
+        private readonly IOperationTracker _operationTracker;
 
-        public BooksController(ILocalEventBus localEventBus)
+        public BooksController(ILocalEventBus localEventBus, IMapper mapper, IOperationTracker operationTracker)
         {
             _localEventBus = localEventBus;
+            _mapper = mapper;
+            _operationTracker = operationTracker;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateBookDto dto)
+        public IActionResult Create(Guid operationId, CreateBookDto dto)
         {
-            var result = await _localEventBus.Send(new CreateBookCommand { Title = dto.Title, Description = dto.Description });
+            var command = _mapper.Map<CreateBookCommand>(dto);
 
-            return Ok(result);
+            _ = _localEventBus.Send(command).ContinueWith(t => _operationTracker.Completed(t, operationId));
+
+            return Accepted();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(EditBookDto dto)
+        public IActionResult Edit(Guid operationId, EditBookDto dto)
         {
-            var result = await _localEventBus.Send(new EditBookCommand { Id = dto.Id, Title = dto.Title, Description = dto.Description });
+            var command = _mapper.Map<EditBookCommand>(dto);
 
-            return Ok(result);
+            _ = _localEventBus.Send(command).ContinueWith(t => _operationTracker.Completed(t, operationId));
+
+            return Accepted();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] GetBooksDto dto)
+        public async Task<CommonResultDto<BookDto[]>> Get([FromQuery] GetBooksDto dto)
         {
-            var result = await _localEventBus.Execute(new GetBooksQuery { Skip = dto.Skip, Take = dto.Take });
+            var query = _mapper.Map<GetBooksQuery>(dto);
 
-            return Ok(result);
+            var result = await _localEventBus.Execute(query);
+
+            // TODO : Error handling. Filter?
+            return new CommonResultDto<BookDto[]>(result.ToArray(), Array.Empty<ErrorDto>());
         }
     }
 }

@@ -13,17 +13,17 @@ namespace Ibdb.Shared.Infrastructure
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<ICommandResult> Send(ICommand command)
+        public async Task Send<TCommand>(TCommand command)
         {
             if (command is null)
                 throw new ArgumentNullException(nameof(command));
 
             await using var scope = _serviceProvider.CreateAsyncScope();
 
-            var commandHandlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
+            var commandHandlerType = typeof(ICommandHandler<TCommand>);
             var commandHandler = (ICommandHandler)scope.ServiceProvider.GetRequiredService(commandHandlerType);
 
-            return await commandHandler.Handle(command);
+            await commandHandler.Handle(command);
         }
 
         public async Task<TResponse> Request<TResponse>(IRequest<TResponse> request)
