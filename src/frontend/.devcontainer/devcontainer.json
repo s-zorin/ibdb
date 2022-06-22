@@ -1,0 +1,21 @@
+{
+	"name": "Ibdb",
+
+	"dockerComposeFile": [
+		"../../docker-compose.yml",
+		"../../docker-compose.override.yml"
+	],
+
+	"service": "frontend",
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Vue.vscode-typescript-vue-plugin",
+				"Vue.volar"
+			]
+		}
+	},
+
+	"workspaceFolder": "/workspaces/ibdb/src/frontend"
+}

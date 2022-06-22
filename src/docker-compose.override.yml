@@ -1,6 +1,10 @@
 version: '3.9'
 
 services:
+  frontend:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
   books:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

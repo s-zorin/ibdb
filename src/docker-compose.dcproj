@@ -5,14 +5,14 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>c12c8738-4c91-473e-8ffd-2dd4e3154289</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>ibdb.books</DockerServiceName>
+    <DockerServiceUrl>http://localhost:3000</DockerServiceUrl>
+    <DockerServiceName>frontend</DockerServiceName>
+    <DockerComposeProjectName>ibdb-dev</DockerComposeProjectName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
-    <None Include=".dockerignore" />
   </ItemGroup>
 </Project>
