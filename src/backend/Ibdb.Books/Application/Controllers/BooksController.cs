@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ibdb.Books.Application.Controllers
 {
-    [Route("api/book")]
+    [Route("api/books")]
     [ApiController]
     public class BooksController : ControllerBase
     {

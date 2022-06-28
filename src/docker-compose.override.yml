@@ -2,8 +2,14 @@ version: '3.9'
 
 services:
   frontend:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+    build:
+      context: ./frontend
+      dockerfile: .devcontainer/Dockerfile
+    command: bash -c "npm install && npm run dev"
+    user: root
+    volumes:
+      - ./frontend:/workspaces/ibdb/src/frontend
+      - /workspaces/ibdb/src/frontend/node_modules/
 
   books:
     environment:
