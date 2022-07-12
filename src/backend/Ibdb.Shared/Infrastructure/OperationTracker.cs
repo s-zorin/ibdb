@@ -1,6 +1,5 @@
 ﻿using Ibdb.Shared.Application;
 using Ibdb.Shared.Application.Dtos;
-using Ibdb.Shared.Application.Exceptions;
 using Ibdb.Shared.Application.Notifications;
 using System.Data;
 
@@ -9,10 +8,12 @@ namespace Ibdb.Shared.Infrastructure
     internal class OperationTracker : IOperationTracker, ITransientService
     {
         private readonly IDistributedEventBus _distributedEventBus;
+        private readonly IMapper _mapper;
 
-        public OperationTracker(IDistributedEventBus distributedEventBus)
+        public OperationTracker(IDistributedEventBus distributedEventBus, IMapper mapper)
         {
             _distributedEventBus = distributedEventBus;
+            _mapper = mapper;
         }
 
         public async Task Completed(Task completedTask, Guid operationId)
@@ -20,20 +21,10 @@ namespace Ibdb.Shared.Infrastructure
             if (completedTask.Status is not (TaskStatus.Faulted or TaskStatus.RanToCompletion))
                 return;
 
-            var errors = completedTask.Exception?.Flatten()
-                .InnerExceptions.Select(ToError).Distinct().ToArray() ?? Array.Empty<ErrorDto>();
+            var exceptions = completedTask.Exception?.Flatten().InnerExceptions.ToList() ?? new List<Exception>();
+            var errors = exceptions.Select(e => _mapper.Map<ErrorDto>(e)).Distinct().ToArray();
 
             await _distributedEventBus.Publish(new OperationCompletedNotification(operationId, errors));
-
-            static ErrorDto ToError(Exception e)
-            {
-                return e switch
-                {
-                    ValidationException ve => new(ve.Code, ve.Message),
-                    BusinessException be => new(be.Code, be.Message),
-                    _ => new("INTERNAL_SERVER_ERROR", "Internal server error."),
-                };
-            }
         }
     }
 }

@@ -2,7 +2,6 @@
 using Ibdb.Books.Application.Dtos;
 using Ibdb.Books.Application.Queries;
 using Ibdb.Shared.Application;
-using Ibdb.Shared.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ibdb.Books.Application.Controllers
@@ -23,6 +22,7 @@ namespace Ibdb.Books.Application.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(202)]
         public IActionResult Create(Guid operationId, CreateBookDto dto)
         {
             var command = _mapper.Map<CreateBookCommand>(dto);
@@ -33,6 +33,7 @@ namespace Ibdb.Books.Application.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(202)]
         public IActionResult Edit(Guid operationId, EditBookDto dto)
         {
             var command = _mapper.Map<EditBookCommand>(dto);
@@ -43,14 +44,14 @@ namespace Ibdb.Books.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<CommonResultDto<BookDto[]>> Get([FromQuery] GetBooksDto dto)
+        [ProducesResponseType(200)]
+        public async Task<PageDto<BookDto>> Get([FromQuery] GetBooksDto dto)
         {
             var query = _mapper.Map<GetBooksQuery>(dto);
 
             var result = await _localEventBus.Execute(query);
 
-            // TODO : Error handling. Filter?
-            return new CommonResultDto<BookDto[]>(result.ToArray(), Array.Empty<ErrorDto>());
+            return new PageDto<BookDto>(result.Books.ToArray(), result.TotalCount);
         }
     }
 }

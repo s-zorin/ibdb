@@ -27,6 +27,11 @@ namespace Ibdb.Books.Application.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<int> Count()
+        {
+            return await _context.Books.CountAsync();
+        }
+
         public async Task<ICollection<Book>> Get(int skip, int take)
         {
             return await _context.Books.Skip(skip).Take(take).ToListAsync();

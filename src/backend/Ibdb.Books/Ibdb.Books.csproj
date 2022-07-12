@@ -21,4 +21,12 @@
     <ProjectReference Include="..\Ibdb.Shared\Ibdb.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\serge\source\repos\learning\ibdb\src\backend\Ibdb.Books\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\serge\source\repos\learning\ibdb\src\backend\Ibdb.Books\.editorconfig" />
+  </ItemGroup>
+
 </Project>

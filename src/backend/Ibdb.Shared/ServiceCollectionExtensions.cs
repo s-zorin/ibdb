@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using EasyNetQ;
 using Ibdb.Shared.Application;
+using Ibdb.Shared.Application.Filters;
 using Ibdb.Shared.Application.Handlers;
 using Ibdb.Shared.Infrastructure;
 using Ibdb.Shared.Infrastructure.Ef;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -91,6 +93,10 @@ namespace Ibdb.Shared
             services.AddAutoMapper(executingAssembly, entryAssembly);
 
             services.AddSignalR();
+
+            services
+                .AddControllers(options => options.Filters.Add<CommonResultFilter>())
+                .ConfigureApplicationPartManager(manager => manager.ApplicationParts.Add(new AssemblyPart(typeof(ServiceCollectionExtensions).Assembly)));
 
             return services;
         }
