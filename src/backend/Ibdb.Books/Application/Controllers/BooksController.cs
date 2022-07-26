@@ -53,5 +53,14 @@ namespace Ibdb.Books.Application.Controllers
 
             return new PageDto<BookDto>(result.Books.ToArray(), result.TotalCount);
         }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        public async Task<BookDto?> FindBook(Guid id)
+        {
+            var query = new FindBookQuery { Id = id };
+
+            return await _localEventBus.Execute(query);
+        }
     }
 }

@@ -26,11 +26,15 @@ export default defineComponent({
         })
 
         const canGoFirst = computed(() => {
-            return props.pageIndex > 1
+            return props.pageMaxIndex > 2
+                ? props.pageIndex > 1
+                : false
         })
 
         const canGoLast = computed(() => {
-            return props.pageIndex < props.pageMaxIndex - 1
+            return props.pageMaxIndex > 2
+                ? props.pageIndex < props.pageMaxIndex - 1
+                : false
         })
 
         const condition = <T>(

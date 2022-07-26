@@ -5,6 +5,6 @@ namespace Ibdb.Shared.Application
     {
         TDestination Map<TSource, TDestination>(TSource source);
 
-        TDestination Map<TDestination>(object source);
+        TDestination Map<TDestination>(object? source);
     }
 }

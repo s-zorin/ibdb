@@ -43,7 +43,7 @@ namespace Ibdb.Shared.Application.Controllers
                 HttpContext.Response.StatusCode = code;
             }
 
-            return new ObjectResult(new CommonResultDto(errors));
+            return new ObjectResult(new CommonResultDto<object>(null, errors));
         }
     }
 }

@@ -40,10 +40,18 @@ export default defineComponent({
     </div>
     <div ref="menu" class="navbar-menu">
       <div class="navbar-start">
-        <RouterLink :to="{ name: 'books' }" class="navbar-item">
-          Books
-        </RouterLink>
-        <RouterLink :to="{ name: 'reviews' }" class="navbar-item">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <RouterLink :to="{ name: 'books-view' }" class="navbar-link">
+            Books
+          </RouterLink>
+          <div class="navbar-dropdown">
+            <RouterLink :to="{ name: 'books-add' }" class="navbar-item">
+              Add New Book
+            </RouterLink>
+          </div>
+        </div>
+
+        <RouterLink :to="{ name: 'reviews-view' }" class="navbar-item">
           Reviews
         </RouterLink>
       </div>

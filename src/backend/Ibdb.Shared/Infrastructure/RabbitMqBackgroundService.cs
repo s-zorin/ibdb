@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Ibdb.Shared.Infrastructure
 {
-    internal class RabbitMqBackgroundService : IHostedService
+    internal class RabbitMqBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceCollection _serviceCollection;
@@ -17,7 +17,7 @@ namespace Ibdb.Shared.Infrastructure
             _serviceCollection = serviceCollection;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             SubscribeToNotifications();
             SubscribeToRequests();
@@ -25,7 +25,7 @@ namespace Ibdb.Shared.Infrastructure
             return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public override Task StopAsync(CancellationToken cancellationToken)
         {
             foreach (var disposable in _disposables)
             {

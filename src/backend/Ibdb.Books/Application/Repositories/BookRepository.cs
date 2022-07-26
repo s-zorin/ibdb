@@ -36,5 +36,11 @@ namespace Ibdb.Books.Application.Repositories
         {
             return await _context.Books.Skip(skip).Take(take).ToListAsync();
         }
+
+        public async Task<Book?> Find(Guid id)
+        {
+            var books = await _context.Books.Where(b => b.Id == id).ToListAsync();
+            return books.SingleOrDefault();
+        }
     }
 }

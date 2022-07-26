@@ -6,5 +6,5 @@ builder.Services.AddSharedServices(options => options
     .AddRabbitMq(builder.Configuration.GetConnectionString("RabbitMq")));
 
 var app = builder.Build();
-app.MapHub<NotificationHub>("/notifications");
+app.MapHub<NotificationHub>("api/notifications");
 app.Run();

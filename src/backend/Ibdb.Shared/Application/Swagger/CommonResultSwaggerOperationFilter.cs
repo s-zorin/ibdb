@@ -52,7 +52,7 @@ namespace Ibdb.Shared.Application.Swagger
 
             OpenApiMediaType CreateErrorMediaType() => new()
             {
-                Schema = context.SchemaGenerator.GenerateSchema(typeof(CommonResultDto), context.SchemaRepository)
+                Schema = context.SchemaGenerator.GenerateSchema(typeof(CommonResultDto<>), context.SchemaRepository)
             };
         }
     }

@@ -7,6 +7,8 @@ namespace Ibdb.Books.Application.Repositories
     {
         public Task<ICollection<Book>> Get(int skip, int take);
 
+        public Task<Book?> Find(Guid id);
+
         public Task<int> Count();
     }
 }

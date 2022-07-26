@@ -25,7 +25,7 @@ namespace Ibdb.Shared.Application.Filters
 
             if (objectResult.Value is null)
             {
-                context.Result = new ObjectResult(new CommonResultDto(Array.Empty<ErrorDto>()));
+                context.Result = new ObjectResult(new CommonResultDto<object>(null, Array.Empty<ErrorDto>()));
                 return;
             }
 

@@ -16,7 +16,7 @@ namespace Ibdb.Shared.Infrastructure
             return _mapper.Map<TSource, TDestination>(source);
         }
 
-        public TDestination Map<TDestination>(object source)
+        public TDestination Map<TDestination>(object? source)
         {
             return _mapper.Map<TDestination>(source);
         }
