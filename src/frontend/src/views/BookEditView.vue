@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref, watchEffect } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { v4 as uuid } from 'uuid'
 import Api from '@/services/api'
 import type CommonResultDto from '@/dtos/commonResultDto'
@@ -16,9 +16,11 @@ export default defineComponent({
     },
     setup() {
         const router = useRouter()
+        const route = useRoute()
         const isEmptyModalActive = ref(false)
         const isConfirmModalActive = ref(false)
         const isErrorModalActive = ref(false)
+        const id = route.params.id as string | undefined
         const title = ref<string>()
         const description = ref<string>()
 
@@ -26,14 +28,15 @@ export default defineComponent({
             if (title.value == undefined)
                 return
 
+            if (id == undefined)
+                return
+
             isEmptyModalActive.value = true
 
-            let id = uuid()
-
-            Api.createBook(id, title.value, description.value, (result: CommonResultDto<string>) => {
+            Api.updateBook(id, title.value, description.value, (result: CommonResultDto<string>) => {
                 isEmptyModalActive.value = false
 
-                if ((result.errors?.length ?? 0) > 0) {
+                if (result.errors.length > 0) {
                     isErrorModalActive.value = true
                     return
                 }
@@ -58,6 +61,27 @@ export default defineComponent({
             isErrorModalActive.value = false
         }
 
+        watchEffect(async () => {
+            if (id == undefined) {
+                router.push('/')
+                return
+            }
+
+            isEmptyModalActive.value = true
+
+            const result = await Api.getBook(id)
+
+            isEmptyModalActive.value = false
+
+            if (result.errors.length > 0) {
+                isErrorModalActive.value = true
+                return
+            }
+
+            title.value = result.value?.title
+            description.value = result.value?.description
+        })
+
         return {
             isEmptyModalActive,
             isConfirmModalActive,
@@ -76,7 +100,7 @@ export default defineComponent({
 
 <template>
     <section class="section is-flex-grow-0 is-flex-shrink-1">
-        <h1 class="title">Add Book</h1>
+        <h1 class="title">Edit Book</h1>
     </section>
 
     <section class="section is-flex-grow-0 is-flex-shrink-1">

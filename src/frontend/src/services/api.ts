@@ -36,6 +36,20 @@ module Api {
         return await fetch(url, post)
     }
 
+    async function put(path: string, parameters: QueryKeyValue[] | undefined, body: object | undefined): Promise<Response> {
+        const url = createUrl(path, parameters)
+
+        const put: RequestInit = {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json;charset=UTF-8',
+            },
+            body: JSON.stringify(body)
+        }
+
+        return await fetch(url, put)
+    }
+
     function createUrl(path: string, parameters: QueryKeyValue[] | undefined): string {
         return parameters != undefined && parameters.length > 0
             ? `http://${location.hostname}/${path}?${parameters?.map(p => `${p.key}=${p.value}`).join('&')}`
@@ -63,6 +77,22 @@ module Api {
         let operationId = await Notifications.register(callback)
 
         post(
+            'api/books',
+            [
+                { key: 'operationId', value: operationId }
+            ],
+            {
+                id: id,
+                title: title,
+                description: description
+            }
+        )
+    }
+
+    export async function updateBook(id: string, title: string, description: string | undefined, callback: (result: CommonResultDto<string>) => void) {
+        let operationId = await Notifications.register(callback)
+
+        put(
             'api/books',
             [
                 { key: 'operationId', value: operationId }

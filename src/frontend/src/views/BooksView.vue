@@ -36,7 +36,7 @@ export default defineComponent({
         }
 
         const onEdit = (id: string | undefined) => {
-            console.log(id)
+            router.push(`/books/edit/${id}`)
         }
 
         const onDelete = (id: string | undefined) => {
