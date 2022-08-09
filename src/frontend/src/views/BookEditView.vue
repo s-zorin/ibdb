@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { v4 as uuid } from 'uuid'
 import Api from '@/services/api'
 import type CommonResultDto from '@/dtos/commonResultDto'
 import EmptyModal from '@/components/EmptyModal.vue'

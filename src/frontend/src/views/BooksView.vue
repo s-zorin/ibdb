@@ -2,12 +2,14 @@
 import { defineComponent, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Pagination from '@/components/Pagination.vue'
+import Rating from '@/components/Rating.vue'
 import type BookDto from '@/dtos/bookDto'
 import Api from '@/services/api'
 
 export default defineComponent({
     components: {
-        Pagination
+        Pagination,
+        Rating
     },
     setup() {
         const pageSize = 10
@@ -99,11 +101,11 @@ export default defineComponent({
         <ul>
             <li v-for="book in books" class="item" @click="onView(book.id)">
                 <div class="box">
-                    <p>
-                        <strong>{{ book.title }}</strong>
-                        <br>
-                        {{ book.description }}
-                    </p>
+                    <div class="is-flex">
+                        <p><strong>{{ book.title }}</strong></p>
+                        <Rating class="rating" :value="book.rating" />
+                    </div>
+                    <p>{{ book.description }}</p>
                 </div>
             </li>
         </ul>
@@ -141,5 +143,8 @@ export default defineComponent({
 <style>
 li.item:not(:last-child) {
     margin-bottom: 1rem;
+}
+.rating {
+    padding-left: 1rem;
 }
 </style>
