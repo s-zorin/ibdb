@@ -2,6 +2,7 @@ server {
   listen       80;
   listen  [::]:80;
   server_name  localhost;
+  resolver 127.0.0.11 [::1]:5353 valid=10s;
 
   location / {
     proxy_pass http://frontend:80;
@@ -11,15 +12,21 @@ server {
   }
 
   location /api/books {
-    proxy_pass http://books:80/api/books;
+    set $dn "books";
+    rewrite /api/books/(.*) /$1 break;
+    proxy_pass http://$dn:80/api/books/$1$is_args$args;
   }
 
   location /api/reviews {
-    proxy_pass http://reviews:80/api/reviews;
+    set $dn "reviews";
+    rewrite /api/reviews/(.*) /$1 break;
+    proxy_pass http://$dn:80/api/reviews/$1$is_args$args;
   }
 
   location /api/notifications {
-    proxy_pass http://notifications:80/api/notifications;
+    set $dn "notifications";
+    rewrite /api/notifications/(.*) /$1 break;
+    proxy_pass http://$dn:80/api/notifications/$1$is_args$args;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
