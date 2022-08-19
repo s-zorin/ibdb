@@ -30,9 +30,15 @@ namespace Ibdb.Reviews.Infrastructure.Ef
                 .IsRequired();
 
             builder
+                .Property(e => e.BookTitle)
+                .HasColumnName("book_title")
+                .HasComment("Book title.")
+                .IsRequired();
+
+            builder
                 .Property(e => e.Score)
                 .HasColumnName("score")
-                .HasComment("Score. 0.0 - lowest possible score, 1.0 highest possible score.")
+                .HasComment("Score. 0.0 - lowest possible score, 1.0 - highest possible score.")
                 .IsRequired();
         }
     }

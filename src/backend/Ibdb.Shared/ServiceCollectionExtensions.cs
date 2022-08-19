@@ -62,7 +62,7 @@ namespace Ibdb.Shared
                         .AsImplementedInterfaces()
                         .WithScopedLifetime()
                      .AddClasses(classes => classes
-                        .AssignableTo(typeof(IEventConvertHandler<>)))
+                        .AssignableTo(typeof(IIntegrationEventHandler<>)))
                         .AsImplementedInterfaces()
                         .WithTransientLifetime()
                      .AddClasses(classes => classes

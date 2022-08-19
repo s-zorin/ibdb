@@ -1,4 +1,4 @@
-﻿namespace Ibdb.Books.Application.Dtos
+﻿namespace Ibdb.Shared.Application.Dtos
 {
     public record PageDto<T>(T[] Items, int TotalCount);
 }

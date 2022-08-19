@@ -25,7 +25,7 @@ namespace Ibdb.Books.Application.Handlers
 
             var eventData = await _jsonSerializer.Serialize(_mapper.Map<BookCreatedEventDataDto>(command));
 
-            await _eventStore.AddEvent(command.Id, "BookCreated", 1, eventData);
+            await _eventStore.AddEvent(command.Id, EventNames.Books.BookCreated, 1, eventData);
         }
     }
 }

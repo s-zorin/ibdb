@@ -6,7 +6,7 @@ namespace Ibdb.Books.Application.Handlers
 {
     public class BookReviewedEventHandler : IEventHandler<Book, BookReviewedEventDataDto>
     {
-        public string Name => "BookReviewed";
+        public string Name => EventNames.Books.BookReviewed;
 
         public int DataVersion => 1;
 

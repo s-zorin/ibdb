@@ -1,12 +1,12 @@
-﻿using Ibdb.Books.Application.Dtos;
-using Ibdb.Books.Domain;
+﻿using Ibdb.Reviews.Application.Dtos;
+using Ibdb.Reviews.Domain;
 using Ibdb.Shared.Application;
 
-namespace Ibdb.Books.Application.Handlers
+namespace Ibdb.Reviews.Application.Handlers
 {
     public class BookEditedEventHandler : IEventHandler<Book, BookEditedEventDataDto>
     {
-        public string Name => EventNames.Books.BookEdited;
+        public string Name => EventNames.Reviews.BookEdited;
 
         public int DataVersion => 1;
 
@@ -15,7 +15,7 @@ namespace Ibdb.Books.Application.Handlers
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
-            entity.Title = data.Title!;
+            entity.Title = data.Title;
             entity.Description = data.Description;
 
             return entity;

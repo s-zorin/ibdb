@@ -2,6 +2,7 @@
 using Ibdb.Books.Application.Dtos;
 using Ibdb.Books.Application.Queries;
 using Ibdb.Shared.Application;
+using Ibdb.Shared.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ibdb.Books.Application.Controllers

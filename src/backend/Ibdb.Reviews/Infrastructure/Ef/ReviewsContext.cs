@@ -12,6 +12,8 @@ namespace Ibdb.Reviews.Infrastructure.Ef
 
         public DbSet<Review> Reviews => Set<Review>();
 
+        public DbSet<Book> Books => Set<Book>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ibdb.Reviews.Migrations
 {
     [DbContext(typeof(ReviewsContext))]
-    [Migration("20220607131741_ReviewsInitial")]
-    partial class ReviewsInitial
+    [Migration("20220819081202_Reviews_Initial")]
+    partial class Reviews_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,29 @@ namespace Ibdb.Reviews.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Ibdb.Reviews.Domain.Book", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasComment("Book Id.");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description")
+                        .HasComment("Book description.");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title")
+                        .HasComment("Book title.");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("books", (string)null);
+                });
 
             modelBuilder.Entity("Ibdb.Reviews.Domain.Review", b =>
                 {
@@ -36,10 +59,16 @@ namespace Ibdb.Reviews.Migrations
                         .HasColumnName("book_id")
                         .HasComment("Book Id.");
 
+                    b.Property<string>("BookTitle")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("book_title")
+                        .HasComment("Book title.");
+
                     b.Property<float>("Score")
                         .HasColumnType("real")
                         .HasColumnName("score")
-                        .HasComment("Score. 0.0 - lowest possible score, 1.0 highest possible score.");
+                        .HasComment("Score. 0.0 - lowest possible score, 1.0 - highest possible score.");
 
                     b.Property<string>("Text")
                         .IsRequired()

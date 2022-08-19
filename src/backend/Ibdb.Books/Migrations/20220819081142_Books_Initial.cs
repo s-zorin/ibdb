@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ibdb.Books.Migrations
 {
-    public partial class BooksInitial : Migration
+    public partial class Books_Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

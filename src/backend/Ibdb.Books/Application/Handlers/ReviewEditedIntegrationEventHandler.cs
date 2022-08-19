@@ -4,24 +4,25 @@ using Ibdb.Shared.Application.Dtos;
 
 namespace Ibdb.Books.Application.Handlers
 {
-    public class ReviewCreatedEventConvertHandler : IEventConvertHandler<ReviewCreatedEventDataDto>
+    public class ReviewEditedIntegrationEventHandler : IIntegrationEventHandler<ReviewEditedEventDataDto>
     {
         private readonly IJsonSerializer _jsonSerializer;
 
-        public ReviewCreatedEventConvertHandler(IJsonSerializer jsonSerializer)
+        public ReviewEditedIntegrationEventHandler(IJsonSerializer jsonSerializer)
         {
             _jsonSerializer = jsonSerializer;
         }
 
-        public string Name => "ReviewCreated";
+        public string Name => EventNames.Reviews.ReviewEdited;
 
         public int DataVersion => 1;
 
-        public async Task<ConvertedEventDto> Convert(Guid entityId, ReviewCreatedEventDataDto eventData)
+        public async IAsyncEnumerable<EventDto> Handle(Guid entityId, ReviewEditedEventDataDto eventData)
         {
-            return new ConvertedEventDto(
+            yield return new EventDto(
+                Id: Guid.NewGuid(),
                 EntityId: eventData.BookId,
-                Name: "BookReviewed",
+                Name: EventNames.Books.BookReviewed,
                 DataVersion: 1,
                 Data: await _jsonSerializer.Serialize(new BookReviewedEventDataDto(entityId, eventData.Score)));
         }
