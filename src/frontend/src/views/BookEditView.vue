@@ -134,7 +134,7 @@ export default defineComponent({
         :is-active="isConfirmModalActive"
         title="Are you sure?"
         message="Clicking on &quot;Discard changes&quot; will take you to the main page and the changes you made won't be saved."
-        confirm-button-caption="Discard"
+        confirm-button-caption="Discard changes"
         cancel-button-caption="Cancel"
         @confirm="onConfirmConfirm"
         @cancel="onConfirmCancel" />

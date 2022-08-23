@@ -46,7 +46,7 @@ export default defineComponent({
         }
 
         const onReview = (id: string | undefined) => {
-            console.log(id)
+            router.push(`/reviews/add?bookid=${id}`)
         }
 
         const onBookModalClose = () => {
@@ -100,7 +100,7 @@ export default defineComponent({
     <section id="content" class="section is-flex-grow-1 is-flex-shrink-1">
         <ul>
             <li v-for="book in books" class="item" @click="onView(book.id)">
-                <div class="box">
+                <div class="box is-clickable">
                     <div class="is-flex">
                         <p><strong>{{ book.title }}</strong></p>
                         <Rating class="rating" :value="book.rating" />

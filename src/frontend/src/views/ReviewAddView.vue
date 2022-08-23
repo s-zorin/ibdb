@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref, watchEffect } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { v4 as uuid } from 'uuid'
 import Api from '@/services/api'
 import type CommonResultDto from '@/dtos/commonResultDto'
@@ -16,29 +16,34 @@ export default defineComponent({
     },
     setup() {
         const router = useRouter()
+        const route = useRoute()
         const isEmptyModalActive = ref(false)
         const isConfirmModalActive = ref(false)
         const isErrorModalActive = ref(false)
         const title = ref<string>()
-        const description = ref<string>()
+        const score = ref<number>(5)
+        const text = ref<string>()
+
+        const bookId = route.query.bookid as string | undefined
 
         const onSubmit = () => {
-            if (title.value == undefined)
+            if (bookId == undefined)
                 return
 
             isEmptyModalActive.value = true
 
-            let id = uuid()
+            const id = uuid()
+            const normalizedScore = score.value / 5 
 
-            Api.createBook(id, title.value, description.value, (result: CommonResultDto<string>) => {
+            Api.createReview(id, bookId, text.value, normalizedScore, (result: CommonResultDto<string>) => {
                 isEmptyModalActive.value = false
 
-                if ((result.errors?.length ?? 0) > 0) {
+                if (result.errors.length > 0) {
                     isErrorModalActive.value = true
                     return
                 }
 
-                router.push(`/books/${id}`)
+                router.push(`/reviews/${id}`)
             })
         }
 
@@ -58,12 +63,38 @@ export default defineComponent({
             isErrorModalActive.value = false
         }
 
+        watchEffect(async () => {
+            if (bookId == undefined) {
+                router.push('/')
+                return
+            }
+
+            isEmptyModalActive.value = true
+
+            const result = await Api.getBook(bookId)
+
+            isEmptyModalActive.value = false
+
+            if (result.errors.length > 0) {
+                isErrorModalActive.value = true
+                return
+            }
+
+            if (result.value == undefined) {
+                router.push('/')
+                return
+            }
+
+            title.value = result.value.title
+        })
+
         return {
             isEmptyModalActive,
             isConfirmModalActive,
             isErrorModalActive,
             title,
-            description,
+            score,
+            text,
             onSubmit,
             onCancel,
             onConfirmConfirm,
@@ -76,21 +107,34 @@ export default defineComponent({
 
 <template>
     <section class="section is-flex-grow-0 is-flex-shrink-1">
-        <h1 class="title">Add Book</h1>
+        <h1 class="title">Add Review</h1>
     </section>
 
     <section class="section is-flex-grow-0 is-flex-shrink-1">
         <div class="field">
-            <label class="label">Title</label>
+            <label class="label">Book</label>
             <div class="control">
-                <input v-model="title" class="input" type="text" placeholder="Enter book's title here">
+                <input v-model="title" class="input" type="text" disabled>
             </div>
         </div>
 
         <div class="field">
-            <label class="label">Description</label>
+            <label class="label">Score</label>
+            <div class="select">
+            <select v-model="score">
+                <option>5</option>
+                <option>4</option>
+                <option>3</option>
+                <option>2</option>
+                <option>1</option>
+            </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Text</label>
             <div class="control">
-                <textarea v-model="description" class="textarea" placeholder="Enter book's description here"></textarea>
+                <textarea v-model="text" class="textarea" placeholder="Enter your review here"></textarea>
             </div>
         </div>
 

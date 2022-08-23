@@ -1,5 +1,6 @@
 import type CommonResultDto from '@/dtos/commonResultDto'
 import type BookDto from '@/dtos/bookDto'
+import type ReviewDto from '@/dtos/reviewDto'
 import type PageDto from '@/dtos/pageDto'
 import Notifications from '@/services/notifications'
 
@@ -101,6 +102,56 @@ module Api {
                 id: id,
                 title: title,
                 description: description
+            }
+        )
+    }
+
+    export async function getReviews(skip: number, take: number): Promise<CommonResultDto<PageDto<ReviewDto[]>>> {
+        const response = await get(
+            'api/reviews',
+            [
+                { key: 'skip', value: skip },
+                { key: 'take', value: take }
+            ])
+
+        return (await response.json()) as CommonResultDto<PageDto<ReviewDto[]>>
+    }
+
+    export async function getReview(id: string): Promise<CommonResultDto<ReviewDto>> {
+        const response = await get(`api/reviews/${id}`)
+
+        return (await response.json()) as CommonResultDto<ReviewDto>
+    }
+
+    export async function createReview(id: string, bookId: string, text: string | undefined, score: number, callback: (result: CommonResultDto<string>) => void) {
+        let operationId = await Notifications.register(callback)
+
+        post(
+            'api/reviews',
+            [
+                { key: 'operationId', value: operationId }
+            ],
+            {
+                id: id,
+                bookId: bookId,
+                text: text,
+                score: score
+            }
+        )
+    }
+
+    export async function updateReview(id: string, text: string | undefined, score: number, callback: (result: CommonResultDto<string>) => void) {
+        let operationId = await Notifications.register(callback)
+
+        put(
+            'api/reviews',
+            [
+                { key: 'operationId', value: operationId }
+            ],
+            {
+                id: id,
+                text: text,
+                score: score
             }
         )
     }

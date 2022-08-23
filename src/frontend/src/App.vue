@@ -51,9 +51,9 @@ export default defineComponent({
           </div>
         </div>
 
-        <RouterLink :to="{ name: 'reviews-view' }" class="navbar-item">
-          Reviews
-        </RouterLink>
+          <RouterLink :to="{ name: 'reviews-view' }" class="navbar-item">
+            Reviews
+          </RouterLink>
       </div>
       <div class="navbar-end">
       </div>
