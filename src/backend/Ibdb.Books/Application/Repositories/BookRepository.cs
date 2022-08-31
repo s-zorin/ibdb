@@ -29,17 +29,17 @@ namespace Ibdb.Books.Application.Repositories
 
         public async Task<int> Count()
         {
-            return await _context.Books.CountAsync();
+            return await _context.Books.CountAsync(b => !b.IsDeleted);
         }
 
         public async Task<ICollection<Book>> Get(int skip, int take)
         {
-            return await _context.Books.Skip(skip).Take(take).ToListAsync();
+            return await _context.Books.Where(b => !b.IsDeleted).Skip(skip).Take(take).ToListAsync();
         }
 
         public async Task<Book?> Find(Guid id)
         {
-            return await _context.Books.SingleOrDefaultAsync(b => b.Id == id);
+            return await _context.Books.SingleOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
         }
     }
 }

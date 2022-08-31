@@ -18,6 +18,8 @@ namespace Ibdb.Reviews.Infrastructure.MappingProfiles
 
             CreateMap<EditReviewDto, EditReviewCommand>();
 
+            CreateMap<DeleteReviewDto, DeleteReviewCommand>();
+
             CreateMap<GetReviewsDto, GetReviewsQuery>();
 
             CreateMap<EditReviewDto, EditReviewCommand>();

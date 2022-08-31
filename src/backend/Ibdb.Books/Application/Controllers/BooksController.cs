@@ -44,6 +44,17 @@ namespace Ibdb.Books.Application.Controllers
             return Accepted();
         }
 
+        [HttpDelete]
+        [ProducesResponseType(202)]
+        public IActionResult Delete(Guid operationId, DeleteBookDto dto)
+        {
+            var command = _mapper.Map<DeleteBookCommand>(dto);
+
+            _ = _localEventBus.Send(command).ContinueWith(t => _operationTracker.Completed(t, operationId));
+
+            return Accepted();
+        }
+
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<PageDto<BookDto>> Get([FromQuery] GetBooksDto dto)

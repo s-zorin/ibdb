@@ -10,6 +10,8 @@
 
         public float Rating { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public Dictionary<Guid, float> ReviewScores { get; set; } = new Dictionary<Guid, float>();
     }
 }

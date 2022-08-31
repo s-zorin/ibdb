@@ -18,7 +18,11 @@ namespace Ibdb.Books.Infrastructure.MappingProfiles
 
             CreateMap<EditBookDto, EditBookCommand>();
 
+            CreateMap<DeleteBookDto, DeleteBookCommand>();
+
             CreateMap<EditBookCommand, BookEditedEventDataDto>();
+
+            CreateMap<DeleteBookCommand, BookDeletedEventDataDto>();
 
             CreateMap<GetBooksDto, GetBooksQuery>();
         }

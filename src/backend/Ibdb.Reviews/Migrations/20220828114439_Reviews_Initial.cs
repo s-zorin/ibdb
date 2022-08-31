@@ -15,7 +15,8 @@ namespace Ibdb.Reviews.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, comment: "Book Id."),
                     title = table.Column<string>(type: "text", nullable: false, comment: "Book title."),
-                    description = table.Column<string>(type: "text", nullable: true, comment: "Book description.")
+                    description = table.Column<string>(type: "text", nullable: true, comment: "Book description."),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false, comment: "If true the book is considered to be deleted.")
                 },
                 constraints: table =>
                 {
@@ -30,7 +31,8 @@ namespace Ibdb.Reviews.Migrations
                     book_id = table.Column<Guid>(type: "uuid", nullable: false, comment: "Book Id."),
                     book_title = table.Column<string>(type: "text", nullable: false, comment: "Book title."),
                     text = table.Column<string>(type: "text", nullable: false, comment: "Review text."),
-                    score = table.Column<float>(type: "real", nullable: false, comment: "Score. 0.0 - lowest possible score, 1.0 - highest possible score.")
+                    score = table.Column<float>(type: "real", nullable: false, comment: "Score. 0.0 - lowest possible score, 1.0 - highest possible score."),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

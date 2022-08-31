@@ -3,13 +3,20 @@ import { defineComponent, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Pagination from '@/components/Pagination.vue'
 import Rating from '@/components/Rating.vue'
+import EmptyModal from '@/components/EmptyModal.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
+import MessageModal from '@/components/MessageModal.vue'
 import type BookDto from '@/dtos/bookDto'
+import type CommonResultDto from '@/dtos/commonResultDto'
 import Api from '@/services/api'
 
 export default defineComponent({
     components: {
         Pagination,
-        Rating
+        Rating,
+        MessageModal,
+        EmptyModal,
+        ConfirmModal
     },
     setup() {
         const pageSize = 10
@@ -19,6 +26,9 @@ export default defineComponent({
         const book = ref<BookDto>()
         const isModalActive = ref(false)
         const isBookModalActive = ref(false)
+        const isEmptyModalActive = ref(false)
+        const isErrorModalActive = ref(false)
+        const isConfirmModalActive = ref(false)
         const route = useRoute()
         const router = useRouter()
 
@@ -42,7 +52,7 @@ export default defineComponent({
         }
 
         const onDelete = (id: string | undefined) => {
-            console.log(id)
+            isConfirmModalActive.value = true
         }
 
         const onReview = (id: string | undefined) => {
@@ -56,11 +66,38 @@ export default defineComponent({
             isBookModalActive.value = false
         }
 
+        const onErrorOk = () => {
+            isErrorModalActive.value = false
+        }
+
+        const onConfirmCancel = () => {
+            isConfirmModalActive.value = false
+        }
+
+        const onConfirmConfirm = () => {
+            isConfirmModalActive.value = false
+
+            if (book.value?.id == undefined)
+                return
+
+            isEmptyModalActive.value = true
+
+            Api.deleteBook(book.value?.id, (result) => {
+                isEmptyModalActive.value = false
+
+                if (result.errors.length > 0) {
+                    isErrorModalActive.value = true
+                    return
+                }
+
+                location.reload()
+            })
+        }
+
         watchEffect(async () => {
             const result = await Api.getBooks(pageIndex.value * pageSize, pageSize)
 
-            if (result.errors?.length == 0)
-            {
+            if (result.errors.length == 0) {
                 books.value = result.value?.items
                 pageMaxIndex.value = Math.ceil((result.value?.totalCount ?? 0) / pageSize) - 1
             }
@@ -77,12 +114,18 @@ export default defineComponent({
             pageMaxIndex,
             isModalActive,
             isBookModalActive,
+            isEmptyModalActive,
+            isErrorModalActive,
+            isConfirmModalActive,
             onPage,
             onView,
             onEdit,
             onDelete,
             onReview,
-            onBookModalClose
+            onBookModalClose,
+            onErrorOk,
+            onConfirmConfirm,
+            onConfirmCancel
         }
     }
 })
@@ -138,6 +181,24 @@ export default defineComponent({
             </footer>
         </div>
     </div>
+
+    <EmptyModal
+        :is-active="isEmptyModalActive" />
+
+    <ConfirmModal
+        :is-active="isConfirmModalActive"
+        title="Are you sure?"
+        message="Clicking on &quot;Delete book&quot; will delete the book."
+        confirm-button-caption="Delete book"
+        cancel-button-caption="Cancel"
+        @confirm="onConfirmConfirm"
+        @cancel="onConfirmCancel" />
+
+    <MessageModal
+        :is-active="isErrorModalActive"
+        title="Error"
+        message="Unable to complete operation."
+        @ok="onErrorOk" />
 </template>
 
 <style>

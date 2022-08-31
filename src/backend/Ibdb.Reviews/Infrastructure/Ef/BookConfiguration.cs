@@ -28,6 +28,12 @@ namespace Ibdb.Reviews.Infrastructure.Ef
                 .Property(e => e.Description)
                 .HasColumnName("description")
                 .HasComment("Book description.");
+
+            builder
+                .Property(e => e.IsDeleted)
+                .HasColumnName("is_deleted")
+                .HasComment("If true the book is considered to be deleted.")
+                .IsRequired();
         }
     }
 }

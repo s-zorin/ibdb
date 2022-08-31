@@ -1,6 +1,6 @@
 ﻿using Ibdb.Reviews.Application.Dtos;
 using Ibdb.Reviews.Application.Queries;
-using Ibdb.Reviews.Repositories;
+using Ibdb.Reviews.Application.Repositories;
 using Ibdb.Shared.Application;
 
 namespace Ibdb.Reviews.Application.Handlers

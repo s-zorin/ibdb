@@ -11,5 +11,7 @@
         public string Text { get; set; } = string.Empty;
 
         public float Score { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

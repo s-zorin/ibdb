@@ -32,7 +32,7 @@ namespace Ibdb.Reviews.Application.Handlers
                     EntityId: review.Id,
                     Name: EventNames.Reviews.ReviewBookEdited,
                     DataVersion: 1,
-                    Data: await _jsonSerializer.Serialize(new ReviewBookEditedEventData(eventData.Title, eventData.Description)));
+                    Data: await _jsonSerializer.Serialize(new ReviewBookEditedEventDataDto(eventData.Title, eventData.Description)));
             }
 
             yield return new EventDto(

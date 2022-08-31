@@ -3,13 +3,19 @@ import { defineComponent, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Pagination from '@/components/Pagination.vue'
 import Rating from '@/components/Rating.vue'
+import EmptyModal from '@/components/EmptyModal.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
+import MessageModal from '@/components/MessageModal.vue'
 import type ReviewDto from '@/dtos/reviewDto'
 import Api from '@/services/api'
 
 export default defineComponent({
     components: {
         Pagination,
-        Rating
+        Rating,
+        MessageModal,
+        EmptyModal,
+        ConfirmModal
     },
     setup() {
         const pageSize = 10
@@ -17,8 +23,10 @@ export default defineComponent({
         const pageMaxIndex = ref(0)
         const reviews = ref<ReviewDto[]>()
         const review = ref<ReviewDto>()
-        const isModalActive = ref(false)
+        const isConfirmModalActive = ref(false)
+        const isEmptyModalActive = ref(false)
         const isReviewModalActive = ref(false)
+        const isErrorModalActive = ref(false)
         const route = useRoute()
         const router = useRouter()
 
@@ -30,10 +38,10 @@ export default defineComponent({
             if (id == undefined)
                 return
 
-            isModalActive.value = true
+            isEmptyModalActive.value = true
             const result = await Api.getReview(id)
             review.value = result.value
-            isModalActive.value = false
+            isEmptyModalActive.value = false
             isReviewModalActive.value = true
         }
 
@@ -42,7 +50,7 @@ export default defineComponent({
         }
 
         const onDelete = (id: string | undefined) => {
-            console.log(id)
+            isConfirmModalActive.value = true
         }
 
         const onReviewModalClose = () => {
@@ -50,6 +58,34 @@ export default defineComponent({
                 router.push('/reviews')
 
             isReviewModalActive.value = false
+        }
+
+        const onErrorOk = () => {
+            isErrorModalActive.value = false
+        }
+
+        const onConfirmCancel = () => {
+            isConfirmModalActive.value = false
+        }
+
+        const onConfirmConfirm = () => {
+            isConfirmModalActive.value = false
+
+            if (review.value?.id == undefined)
+                return
+
+            isEmptyModalActive.value = true
+
+            Api.deleteReview(review.value?.id, (result) => {
+                isEmptyModalActive.value = false
+
+                if (result.errors.length > 0) {
+                    isErrorModalActive.value = true
+                    return
+                }
+
+                location.reload()
+            })
         }
 
         watchEffect(async () => {
@@ -71,13 +107,18 @@ export default defineComponent({
             reviews,
             pageIndex,
             pageMaxIndex,
-            isModalActive,
+            isEmptyModalActive,
             isReviewModalActive,
+            isErrorModalActive,
+            isConfirmModalActive,
             onPage,
             onView,
             onEdit,
             onDelete,
-            onReviewModalClose
+            onReviewModalClose,
+            onConfirmConfirm,
+            onConfirmCancel,
+            onErrorOk
         }
     }
 })
@@ -110,13 +151,7 @@ export default defineComponent({
         <Pagination @page="onPage" :page-index="pageIndex" :page-max-index="pageMaxIndex" />
     </section>
 
-    <div id="modal" class="modal" :class="{ 'is-active': isModalActive }">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-        </div>
-    </div>
-
-    <div id="bookModal" class="modal" :class="{ 'is-active': isReviewModalActive }">
+    <div id="reviewModal" class="modal" :class="{ 'is-active': isReviewModalActive }">
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
@@ -132,6 +167,24 @@ export default defineComponent({
             </footer>
         </div>
     </div>
+
+    <EmptyModal
+        :is-active="isEmptyModalActive" />
+
+    <ConfirmModal
+        :is-active="isConfirmModalActive"
+        title="Are you sure?"
+        message="Clicking on &quot;Delete review&quot; will delete the review."
+        confirm-button-caption="Delete review"
+        cancel-button-caption="Cancel"
+        @confirm="onConfirmConfirm"
+        @cancel="onConfirmCancel" />
+
+    <MessageModal
+        :is-active="isErrorModalActive"
+        title="Error"
+        message="Unable to complete operation."
+        @ok="onErrorOk" />
 </template>
 
 <style>

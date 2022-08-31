@@ -4,18 +4,22 @@ using Ibdb.Shared.Application;
 
 namespace Ibdb.Books.Application.Handlers
 {
-    public class BookReviewedEventHandler : IEventHandler<Book, BookReviewedEventDataDto>
+    public class BookReviewDeletedEventHandler : IEventHandler<Book, BookReviewDeletedEventDataDto>
     {
-        public string Name => EventNames.Books.BookReviewed;
+        public string Name => EventNames.Books.BookReviewDeleted;
 
         public int DataVersion => 1;
 
-        public Book Handle(Guid entityId, Book? entity, BookReviewedEventDataDto data)
+        public Book Handle(Guid entityId, Book? entity, BookReviewDeletedEventDataDto data)
         {
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
-            entity.ReviewScores[data.ReviewId] = data.Score;
+            if (entity.ReviewScores.ContainsKey(data.ReviewId))
+            {
+                entity.ReviewScores.Remove(data.ReviewId);
+            }
+
             entity.Rating = entity.ReviewScores
                 .Select(p => p.Value)
                 .DefaultIfEmpty(0)

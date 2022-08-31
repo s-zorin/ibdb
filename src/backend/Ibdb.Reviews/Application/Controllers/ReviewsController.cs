@@ -44,6 +44,17 @@ namespace Ibdb.Reviews.Application.Controllers
             return Accepted();
         }
 
+        [HttpDelete]
+        [ProducesResponseType(202)]
+        public IActionResult Delete(Guid operationId, DeleteReviewDto dto)
+        {
+            var command = _mapper.Map<DeleteReviewCommand>(dto);
+
+            _ = _localEventBus.Send(command).ContinueWith(t => _operationTracker.Completed(t, operationId));
+
+            return Accepted();
+        }
+
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<PageDto<ReviewDto>> Get([FromQuery] GetReviewsDto dto)

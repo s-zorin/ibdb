@@ -34,6 +34,11 @@ namespace Ibdb.Reviews.Migrations
                         .HasColumnName("description")
                         .HasComment("Book description.");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted")
+                        .HasComment("If true the book is considered to be deleted.");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text")
@@ -62,6 +67,9 @@ namespace Ibdb.Reviews.Migrations
                         .HasColumnType("text")
                         .HasColumnName("book_title")
                         .HasComment("Book title.");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<float>("Score")
                         .HasColumnType("real")

@@ -16,7 +16,8 @@ namespace Ibdb.Books.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, comment: "Book Id."),
                     title = table.Column<string>(type: "text", nullable: false, comment: "Book title."),
                     description = table.Column<string>(type: "text", nullable: true, comment: "Book description."),
-                    rating = table.Column<float>(type: "real", nullable: false, comment: "Book rating. 0.0 - lowest possible rating, 1.0 highest possible rating.")
+                    rating = table.Column<float>(type: "real", nullable: false, comment: "Book rating. 0.0 - lowest possible rating, 1.0 highest possible rating."),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false, comment: "If true the book is considered to be deleted.")
                 },
                 constraints: table =>
                 {

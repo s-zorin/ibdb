@@ -2,7 +2,7 @@
 using Ibdb.Reviews.Infrastructure.Ef;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ibdb.Reviews.Repositories
+namespace Ibdb.Reviews.Application.Repositories
 {
     public class ReviewRepository : IReviewRepository
     {
@@ -29,32 +29,22 @@ namespace Ibdb.Reviews.Repositories
 
         public async Task<int> Count()
         {
-            return await _context.Reviews.CountAsync();
+            return await _context.Reviews.CountAsync(r => !r.IsDeleted);
         }
 
         public async Task<Review?> Find(Guid id)
         {
-            return await _context.Reviews.SingleOrDefaultAsync(r => r.Id == id);
-        }
-
-        public async Task<Book?> FindBook(Guid id)
-        {
-            return await _context.Books.SingleOrDefaultAsync(b => b.Id == id);
-        }
-
-        public async Task<Review?> FindReview(Guid id)
-        {
-            return await _context.Reviews.SingleOrDefaultAsync(r => r.Id == id);
+            return await _context.Reviews.SingleOrDefaultAsync(r => !r.IsDeleted && r.Id == id);
         }
 
         public async Task<ICollection<Review>> Get(int skip, int take)
         {
-            return await _context.Reviews.Skip(skip).Take(take).ToListAsync();
+            return await _context.Reviews.Where(r => !r.IsDeleted).Skip(skip).Take(take).ToListAsync();
         }
 
         public async Task<ICollection<Review>> GetByBookId(Guid bookId)
         {
-            return await _context.Reviews.Where(r => r.BookId == bookId).ToListAsync();
+            return await _context.Reviews.Where(r => !r.IsDeleted && r.BookId == bookId).ToListAsync();
         }
     }
 }

@@ -36,6 +36,12 @@ namespace Ibdb.Books.Infrastructure.Ef
                 .IsRequired();
 
             builder
+                .Property(e => e.IsDeleted)
+                .HasColumnName("is_deleted")
+                .HasComment("If true the book is considered to be deleted.")
+                .IsRequired();
+
+            builder
                 .Ignore(e => e.ReviewScores);
         }
     }

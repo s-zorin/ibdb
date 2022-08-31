@@ -2,7 +2,7 @@
 using Ibdb.Reviews.Infrastructure.Ef;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ibdb.Reviews.Repositories
+namespace Ibdb.Reviews.Application.Repositories
 {
     public class BookRepository : IBookRepository
     {
@@ -25,6 +25,11 @@ namespace Ibdb.Reviews.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Book?> Find(Guid id)
+        {
+            return await _context.Books.SingleOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
         }
     }
 }

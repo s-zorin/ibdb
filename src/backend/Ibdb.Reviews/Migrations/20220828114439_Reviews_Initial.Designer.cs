@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ibdb.Reviews.Migrations
 {
     [DbContext(typeof(ReviewsContext))]
-    [Migration("20220819081202_Reviews_Initial")]
+    [Migration("20220828114439_Reviews_Initial")]
     partial class Reviews_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,11 @@ namespace Ibdb.Reviews.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description")
                         .HasComment("Book description.");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted")
+                        .HasComment("If true the book is considered to be deleted.");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -64,6 +69,9 @@ namespace Ibdb.Reviews.Migrations
                         .HasColumnType("text")
                         .HasColumnName("book_title")
                         .HasComment("Book title.");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<float>("Score")
                         .HasColumnType("real")

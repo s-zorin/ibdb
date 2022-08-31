@@ -1,6 +1,6 @@
 ﻿using Ibdb.Reviews.Application.Dtos;
 using Ibdb.Reviews.Application.Queries;
-using Ibdb.Reviews.Repositories;
+using Ibdb.Reviews.Application.Repositories;
 using Ibdb.Shared.Application;
 
 namespace Ibdb.Reviews.Application.Handlers
@@ -18,7 +18,7 @@ namespace Ibdb.Reviews.Application.Handlers
 
         public async Task<ReviewDto?> Handle(FindReviewQuery query)
         {
-            var review = await _reviewRepository.FindReview(query.Id);
+            var review = await _reviewRepository.Find(query.Id);
             return _mapper.Map<ReviewDto?>(review);
         }
     }
