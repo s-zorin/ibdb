@@ -1,0 +1,13 @@
+# IBDB: The Internet Book Database
+The aim of this project is to learn and demonstrate how Event Sourcing could be implemented using ASP.NET Core. **In no way this is a reference implementation or something that can be used as a guide to implement the Event Sourcing pattern, if you somehow found this project, use it at your own risk** 😉.
+## Overview
+The application as a whole contains only the bare minimum of features such as CRUD operations for books and CRUD operations for reviews, also an overal book score is calculated on top of it. Microservices communicate with each other using RabbitMq by sending integration events. SignalR is used to notify the client when an operation it requested is completed. Application data is persisted in PostgreSQL databases. The data is accessed through Entity Framework Core. All microservices return requested data in common format to simplify integration with API.
+## Building
+0. Make sure you have Docker Desktop installed on your PC. You will also need Visual Studio Code to open the frontend project.
+1. Clone this repository.
+2. Navigate to `/src/backend` directory if you want to work with backend. Open the Ibdb.sln file and then press F5 (or click on ▶️ Docker Compose) when the solution loads in Visual Studio. All projects will be automatically deployed through Docker Compose. Navigate to `localhost` in your browser to see the frontend or `localhost:8001` to see the Books' service Swagger or `localhost:8002` to see the Reviews' service Swagger.
+3. Navigate to `/src/frontent` directory if you want to work with frontend. Open the directory in Visual Studio Code, when asked if you want to reopen it inside a container say yes. When it reopens press F5, again all services will be automatically built and deployed through Docker Compose. The frontend was built using Vue.js and I'm not a fronted developer so don't judge my code quality😁.
+## Projects
+There are five projects in the solution and only three of them are microservices. One for books, one for reviews and one for sending notifications to the client when an operation is completed. The other one contains shared code which is shared by the microservices and the last one is for running database migrations.
+## Shortcomings
+Some important features are missing such as authentication and authorization or unit tests. Maybe I'll add them later but since the scope of the project kind of already grew out of control I decided to leave it at that.
