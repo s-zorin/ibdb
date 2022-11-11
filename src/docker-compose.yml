@@ -62,22 +62,22 @@ services:
       - rabbitmq
 
   migrator:
-   container_name: ibdb-migrator
-   restart: "no"
-   build:
-     context: ./backend
-     dockerfile: Ibdb.Shared.Migrator/Dockerfile
-   environment:
-     - CONNECTIONSTRINGS__BOOKS=Server=books_db;Port=5432;Database=books;User Id=books;Password=books
-     - CONNECTIONSTRINGS__REVIEWS=Server=reviews_db;Port=5432;Database=reviews;User Id=reviews;Password=reviews
-     - CONNECTIONSTRINGS__EVENTSTORE_BOOKS=Server=books_db;Port=5432;Database=books;User Id=books;Password=books
-     - CONNECTIONSTRINGS__EVENTSTORE_REVIEWS=Server=reviews_db;Port=5432;Database=reviews;User Id=reviews;Password=reviews
-     - CONNECTIONSTRINGS__OUTBOX_BOOKS=Server=books_db;Port=5432;Database=books;User Id=books;Password=books
-     - CONNECTIONSTRINGS__OUTBOX_REVIEWS=Server=reviews_db;Port=5432;Database=reviews;User Id=reviews;Password=reviews
-   networks:
-     - ibdb-network
-   depends_on:
-     - books_db
+    container_name: ibdb-migrator
+    restart: "no"
+    build:
+      context: ./backend
+      dockerfile: Ibdb.Shared.Migrator/Dockerfile
+    environment:
+      - CONNECTIONSTRINGS__BOOKS=Server=books_db;Port=5432;Database=books;User Id=books;Password=books
+      - CONNECTIONSTRINGS__REVIEWS=Server=reviews_db;Port=5432;Database=reviews;User Id=reviews;Password=reviews
+      - CONNECTIONSTRINGS__EVENTSTORE_BOOKS=Server=books_db;Port=5432;Database=books;User Id=books;Password=books
+      - CONNECTIONSTRINGS__EVENTSTORE_REVIEWS=Server=reviews_db;Port=5432;Database=reviews;User Id=reviews;Password=reviews
+      - CONNECTIONSTRINGS__OUTBOX_BOOKS=Server=books_db;Port=5432;Database=books;User Id=books;Password=books
+      - CONNECTIONSTRINGS__OUTBOX_REVIEWS=Server=reviews_db;Port=5432;Database=reviews;User Id=reviews;Password=reviews
+    networks:
+      - ibdb-network
+    depends_on:
+      - books_db
 
   books_db:
     container_name: ibdb-books-db
